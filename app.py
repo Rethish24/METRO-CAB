@@ -2,12 +2,25 @@ import streamlit as st
 import sqlite3, random, os
 import qrcode
 from datetime import datetime
-from data.stations import STATIONS
 from PIL import Image
 
-# ---------------- CONFIG ----------------
+# ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="Metro + Cab Booking", layout="centered")
 
+# ---------------- HYDERABAD METRO STATIONS ----------------
+STATIONS = [
+    "Miyapur","JNTU College","KPHB Colony","Kukatpally","Balanagar",
+    "Moosapet","Bharat Nagar","Erragadda","ESI Hospital","SR Nagar",
+    "Ameerpet","Punjagutta","Irrum Manzil","Khairatabad","Lakdi-ka-pul",
+    "Assembly","Nampally","Gandhi Bhavan","Osmania Medical College",
+    "MG Bus Station","Malakpet","New Market","Musarambagh",
+    "Dilsukhnagar","Chaitanyapuri","Victoria Memorial",
+    "LB Nagar","Nagole","Uppal","Habsiguda","Tarnaka",
+    "Mettuguda","Secunderabad East","Parade Ground",
+    "Paradise","Rasoolpura","Prakash Nagar","Begumpet"
+]
+
+# ---------------- QR SETUP ----------------
 QR_FOLDER = "qr_codes"
 os.makedirs(QR_FOLDER, exist_ok=True)
 
@@ -57,7 +70,7 @@ if "step" not in st.session_state:
 
 st.title("🚇 Smart Metro + 🚕 Cab Booking")
 
-# ---------------- STEP 1 ----------------
+# ---------------- STEP 1: USER DETAILS ----------------
 if st.session_state.step == 1:
     st.subheader("Passenger Details")
 
@@ -67,7 +80,7 @@ if st.session_state.step == 1:
 
     if st.button("Continue"):
         if name.strip() == "":
-            st.warning("Enter name")
+            st.warning("Please enter name")
         else:
             conn = get_db()
             cur = conn.cursor()
@@ -81,7 +94,7 @@ if st.session_state.step == 1:
             st.session_state.step = 2
             st.rerun()
 
-# ---------------- STEP 2 ----------------
+# ---------------- STEP 2: METRO BOOKING ----------------
 elif st.session_state.step == 2:
     st.subheader("Metro Ticket Booking")
 
@@ -90,7 +103,7 @@ elif st.session_state.step == 2:
 
     if st.button("Book Ticket"):
         if frm == to:
-            st.warning("Stations must be different")
+            st.warning("From and To stations must be different")
         else:
             fare = metro_fare(frm, to)
             ticket_no = f"TKT{random.randint(100000,999999)}"
@@ -121,7 +134,7 @@ elif st.session_state.step == 2:
             st.session_state.step = 3
             st.rerun()
 
-# ---------------- STEP 3 ----------------
+# ---------------- STEP 3: TICKET ----------------
 elif st.session_state.step == 3:
     st.subheader("🎟 Metro Ticket")
 
@@ -135,7 +148,7 @@ elif st.session_state.step == 3:
         st.session_state.step = 4 if need_cab == "Yes" else 6
         st.rerun()
 
-# ---------------- STEP 4 ----------------
+# ---------------- STEP 4: CAB BOOKING ----------------
 elif st.session_state.step == 4:
     st.subheader("🚕 Cab Booking")
 
@@ -157,7 +170,7 @@ elif st.session_state.step == 4:
             st.session_state.step = 5
             st.rerun()
 
-# ---------------- STEP 5 ----------------
+# ---------------- STEP 5: CAB DETAILS ----------------
 elif st.session_state.step == 5:
     st.subheader("🚖 Cab Details")
 
