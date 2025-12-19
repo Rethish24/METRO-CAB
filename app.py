@@ -3,6 +3,13 @@ import sqlite3, random, os
 import qrcode
 from datetime import datetime
 from PIL import Image
+import streamlit as st
+from supabase import create_client
+
+SUPABASE_URL = "https://YOUR_PROJECT_ID.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdyeGhpdGZlcXJkc3piZWlucG9nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjYwNDQxMTAsImV4cCI6MjA4MTYyMDExMH0.dlA3Fs_n09fwgj9LmjOr_6KtyVFKJB-Ov6PX9sB53G0"
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 # ---------------- PAGE CONFIG ----------------
 st.set_page_config(page_title="Metro + Cab Booking", layout="centered")
@@ -197,3 +204,4 @@ elif st.session_state.step == 5:
 # ---------------- STEP 6 ----------------
 elif st.session_state.step == 6:
     st.success("🎉 Metro ticket booked successfully (No cab selected)")
+
